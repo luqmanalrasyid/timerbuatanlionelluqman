@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>IE Time Study: VA, NNVA & NVA Tracker</title>
+  <title>IE Time Study Matrix Tracker</title>
   <style>
     * {
       box-sizing: border-box;
@@ -16,13 +16,13 @@
     body {
       background-color: #090d16;
       color: #f1f5f9;
-      padding: 12px;
+      padding: 10px;
       display: flex;
       justify-content: center;
     }
     .app-container {
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -30,20 +30,20 @@
     .card {
       background-color: #131b2e;
       border: 1px solid #1e293b;
-      border-radius: 16px;
-      padding: 14px;
+      border-radius: 14px;
+      padding: 12px 14px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
     .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .badge-ie {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      font-size: 11px;
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+      font-size: 10.5px;
       font-weight: 700;
       padding: 3px 8px;
       border-radius: 6px;
@@ -55,8 +55,9 @@
       color: #94a3b8;
     }
     .cycle-badge b {
-      color: #ffffff;
+      color: #38bdf8;
       font-size: 15px;
+      font-family: monospace;
     }
     .inputs-grid {
       display: grid;
@@ -68,7 +69,8 @@
       display: block;
       font-size: 11px;
       color: #94a3b8;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
+      font-weight: 600;
     }
     .input-group input {
       width: 100%;
@@ -82,18 +84,18 @@
       user-select: auto;
     }
     .input-group input:focus {
-      border-color: #10b981;
+      border-color: #38bdf8;
     }
     .timer-center {
       text-align: center;
-      padding: 12px;
+      padding: 10px 14px;
     }
     .timer-label {
-      font-size: 11px;
+      font-size: 10.5px;
       color: #94a3b8;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      font-weight: 600;
+      font-weight: 700;
     }
     .main-timer {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -101,7 +103,7 @@
       font-weight: 800;
       letter-spacing: 2px;
       color: #ffffff;
-      margin: 2px 0 6px 0;
+      margin: 1px 0 4px 0;
     }
     .status-pill {
       display: inline-flex;
@@ -109,7 +111,7 @@
       gap: 6px;
       padding: 3px 10px;
       border-radius: 9999px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       background: #1e293b;
       color: #94a3b8;
@@ -130,13 +132,13 @@
       box-shadow: 0 0 8px #34d399;
     }
     .status-nnva {
-      background: rgba(245, 158, 11, 0.15);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.4);
+      background: rgba(37, 99, 235, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(96, 165, 250, 0.4);
     }
     .status-nnva .dot {
-      background: #fbbf24;
-      box-shadow: 0 0 8px #fbbf24;
+      background: #60a5fa;
+      box-shadow: 0 0 8px #60a5fa;
     }
     .status-nva {
       background: rgba(244, 63, 94, 0.15);
@@ -148,8 +150,8 @@
       box-shadow: 0 0 8px #fb7185;
     }
     .ratio-container {
-      margin-top: 10px;
-      padding-top: 8px;
+      margin-top: 8px;
+      padding-top: 6px;
       border-top: 1px solid #1e293b;
     }
     .ratio-labels {
@@ -157,14 +159,14 @@
       justify-content: space-between;
       font-size: 10px;
       font-weight: 700;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
     .text-va { color: #34d399; }
-    .text-nnva { color: #fbbf24; }
+    .text-nnva { color: #60a5fa; }
     .text-nva { color: #fb7185; }
     .bar-bg {
       width: 100%;
-      height: 8px;
+      height: 7px;
       background: #1e293b;
       border-radius: 9999px;
       overflow: hidden;
@@ -176,7 +178,7 @@
       transition: width 0.2s;
     }
     .bar-nnva {
-      background: #f59e0b;
+      background: #2563eb;
       width: 33.3%;
       transition: width 0.2s;
     }
@@ -188,19 +190,19 @@
     .btn-action-group {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
     .big-btn {
       width: 100%;
-      padding: 12px 14px;
-      border-radius: 14px;
+      padding: 11px 13px;
+      border-radius: 12px;
       border: 2px solid transparent;
       display: flex;
       align-items: center;
       justify-content: space-between;
       color: #ffffff;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
       transition: transform 0.1s, border-color 0.2s, box-shadow 0.2s;
     }
     .big-btn:active {
@@ -208,19 +210,19 @@
     }
     .btn-va {
       background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-      border-color: rgba(52, 211, 153, 0.4);
+      border-color: rgba(52, 211, 153, 0.5);
     }
     .btn-nnva {
-      background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
-      border-color: rgba(251, 191, 36, 0.4);
+      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+      border-color: rgba(96, 165, 250, 0.5);
     }
     .btn-nva {
-      background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
-      border-color: rgba(251, 113, 133, 0.4);
+      background: linear-gradient(135deg, #be123c 0%, #f43f5e 100%);
+      border-color: rgba(251, 113, 133, 0.5);
     }
     .btn-active-ring {
-      outline: 4px solid #ffffff;
-      box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
+      outline: 3px solid #ffffff;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.6);
     }
     .btn-left {
       display: flex;
@@ -229,23 +231,23 @@
       text-align: left;
     }
     .icon-box {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
       background: rgba(255, 255, 255, 0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
     }
     .btn-title {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 800;
       letter-spacing: 0.3px;
     }
     .btn-desc {
-      font-size: 10.5px;
+      font-size: 10px;
       opacity: 0.9;
       font-weight: 400;
     }
@@ -254,22 +256,22 @@
     }
     .live-lap-time {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       display: block;
     }
     .tag-badge {
-      font-size: 9.5px;
-      padding: 2px 6px;
-      background: rgba(0, 0, 0, 0.3);
+      font-size: 9px;
+      padding: 1px 5px;
+      background: rgba(0, 0, 0, 0.35);
       border-radius: 4px;
       font-weight: 700;
     }
     .tags-card {
       background: #0f1626;
       border: 1px solid #1e293b;
-      border-radius: 14px;
-      padding: 10px 12px;
+      border-radius: 12px;
+      padding: 9px 12px;
     }
     .tags-top-bar {
       display: flex;
@@ -283,12 +285,12 @@
       font-weight: 700;
     }
     .btn-add-tag {
-      background: #334155;
+      background: #1e293b;
       color: #38bdf8;
-      border: none;
-      padding: 2px 7px;
+      border: 1px solid #334155;
+      padding: 3px 8px;
       border-radius: 6px;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       cursor: pointer;
     }
@@ -296,47 +298,54 @@
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
-      max-height: 110px;
+      max-height: 120px;
       overflow-y: auto;
       padding: 2px 0;
     }
-    .tag-chip {
-      background: #1e293b;
-      color: #cbd5e1;
-      border: 1px solid #334155;
+    .act-chip {
       padding: 4px 8px;
-      border-radius: 8px;
-      font-size: 11px;
+      border-radius: 7px;
+      font-size: 10.5px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 5px;
+      border: 1px solid;
     }
-    .tag-chip.active-tag {
-      background: #2563eb;
-      color: #ffffff;
-      border-color: #60a5fa;
-      font-weight: 700;
+    .chip-va {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.4);
+    }
+    .chip-nnva {
+      background: rgba(37, 99, 235, 0.2);
+      color: #93c5fd;
+      border-color: rgba(96, 165, 250, 0.4);
+    }
+    .chip-nva {
+      background: rgba(244, 63, 94, 0.15);
+      color: #fca5a5;
+      border-color: rgba(251, 113, 133, 0.4);
+    }
+    .chip-active {
+      box-shadow: 0 0 0 2px #ffffff;
+      font-weight: 800;
     }
     .tag-delete-btn {
       color: #94a3b8;
       font-size: 12px;
-      line-height: 1;
       border: none;
       background: none;
       cursor: pointer;
-      padding: 0 1px;
-    }
-    .tag-delete-btn:hover {
-      color: #f43f5e;
     }
     .tag-current-box {
-      margin-top: 8px;
+      margin-top: 7px;
       padding-top: 6px;
       border-top: 1px dashed #1e293b;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
       font-size: 11px;
     }
     .tag-current-box input {
@@ -346,19 +355,19 @@
       padding: 4px 8px;
       border-radius: 6px;
       font-size: 11px;
-      width: 60%;
+      flex: 1;
       outline: none;
       user-select: auto;
     }
     .controls-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
+      grid-template-columns: 1fr 1.3fr 1fr;
+      gap: 6px;
     }
     .btn-ctrl {
-      padding: 9px 5px;
+      padding: 9px 4px;
       border-radius: 10px;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 700;
       border: 1px solid transparent;
       cursor: pointer;
@@ -371,26 +380,22 @@
     .btn-pause { background: #334155; border-color: #475569; }
     .btn-finish { background: #4f46e5; border-color: #6366f1; }
     .btn-export { background: #059669; border-color: #10b981; }
-    .splits-header {
+    .matrix-card {
+      background-color: #131b2e;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .matrix-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
     }
-    .splits-header h3 {
+    .matrix-header h3 {
       font-size: 12.5px;
       font-weight: 700;
       color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .split-count {
-      background: #1e293b;
-      color: #94a3b8;
-      font-size: 10.5px;
-      padding: 2px 7px;
-      border-radius: 9999px;
     }
     .btn-reset {
       background: none;
@@ -400,96 +405,98 @@
       cursor: pointer;
       text-decoration: underline;
     }
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+    }
+    table.matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10.5px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    table.matrix-table th {
+      background-color: #1e293b;
+      color: #cbd5e1;
+      padding: 6px 8px;
+      font-weight: 700;
+      border: 1px solid #334155;
+    }
+    table.matrix-table td {
+      padding: 5px 8px;
+      border: 1px solid #1e293b;
+      font-family: monospace;
+    }
+    .col-act {
+      font-family: -apple-system, sans-serif !important;
+      font-weight: 600;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tr-va { background: rgba(16, 185, 129, 0.12); color: #34d399; }
+    .tr-nnva { background: rgba(37, 99, 235, 0.15); color: #93c5fd; }
+    .tr-nva { background: rgba(244, 63, 94, 0.15); color: #fca5a5; }
+    .tr-total {
+      background: #0f172a;
+      font-weight: 800;
+      color: #ffffff;
+      border-top: 2px solid #38bdf8;
+    }
     .splits-list {
-      max-height: 200px;
+      max-height: 140px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
       padding-right: 2px;
+      margin-top: 6px;
     }
     .split-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 7px 9px;
-      border-radius: 9px;
-      font-size: 11.5px;
+      padding: 5px 8px;
+      border-radius: 7px;
+      font-size: 10.5px;
       border: 1px solid;
     }
-    .row-va {
-      background: rgba(6, 78, 59, 0.3);
-      border-color: rgba(5, 150, 105, 0.4);
-    }
-    .row-nnva {
-      background: rgba(120, 53, 15, 0.3);
-      border-color: rgba(217, 119, 6, 0.4);
-    }
-    .row-nva {
-      background: rgba(136, 19, 55, 0.3);
-      border-color: rgba(225, 29, 72, 0.4);
-    }
-    .row-left {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .row-num {
-      color: #64748b;
-      font-family: monospace;
-      font-size: 10.5px;
-    }
-    .row-pill {
-      font-size: 9.5px;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 4px;
-    }
-    .pill-va { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-    .pill-nnva { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-    .pill-nva { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
-    .row-tag { font-weight: 600; font-size: 11px; }
-    .tag-va { color: #34d399; }
-    .tag-nnva { color: #fbbf24; }
-    .tag-nva { color: #fb7185; }
-    .row-sub { font-size: 9.5px; color: #64748b; }
-    .row-dur {
-      font-family: monospace;
-      font-weight: 700;
-      color: #f1f5f9;
-      font-size: 11.5px;
-    }
-    .dur-running { color: #fbbf24; }
+    .row-va { background: rgba(6, 78, 59, 0.3); border-color: rgba(5, 150, 105, 0.4); }
+    .row-nnva { background: rgba(30, 58, 138, 0.3); border-color: rgba(37, 99, 235, 0.4); }
+    .row-nva { background: rgba(136, 19, 55, 0.3); border-color: rgba(225, 29, 72, 0.4); }
   </style>
 </head>
 <body>
   <div class="app-container">
 
-    <!-- Header Card -->
+    <!-- Header Card: Nama Operator & Nama Proses -->
     <div class="card">
       <div class="header-top">
         <div>
-          <span class="badge-ie">IE Time Study Tool v2.0</span>
-          <div style="font-size: 15px; font-weight: 800; color: #fff; margin-top: 3px;">Cycle Timer: VA • NNVA • NVA</div>
+          <span class="badge-ie">IE Shoe Factory Study</span>
+          <div style="font-size: 14px; font-weight: 800; color: #fff; margin-top: 3px;">Cycle Time Matrix (VA • NNVA • NVA)</div>
         </div>
-        <div class="cycle-badge">Siklus: <b id="cycleNumDisplay">1</b></div>
+        <div class="cycle-badge">Siklus: <b id="cycleNumDisplay">CT 1</b></div>
       </div>
 
       <div class="inputs-grid">
         <div class="input-group">
-          <label>Proses / Operator:</label>
-          <input type="text" id="processName" placeholder="Contoh: Jahit Upper / Budi">
+          <label>Nama Operator:</label>
+          <input type="text" id="opName" placeholder="Contoh: Nur Hidayah">
         </div>
         <div class="input-group">
-          <label>Model / Article:</label>
-          <input type="text" id="modelName" placeholder="Contoh: Sneaker Runner V2">
+          <label>Nama Proses / Area:</label>
+          <input type="text" id="procName" placeholder="Contoh: Stitching Tip Vamp / B.3.1">
         </div>
       </div>
     </div>
 
     <!-- Main Timer Card -->
     <div class="card timer-center">
-      <div class="timer-label">Total Cycle Time</div>
+      <div class="timer-label">Total Waktu Siklus (CT)</div>
       <div id="mainTimer" class="main-timer">00:00.00</div>
 
       <div id="statusBadge" class="status-pill">
@@ -500,9 +507,9 @@
       <!-- 3-Way Ratio Bar -->
       <div class="ratio-container">
         <div class="ratio-labels">
-          <span class="text-va">VA: <span id="vaTimeText">00:00.0</span> (<span id="vaPercentText">0%</span>)</span>
-          <span class="text-nnva">NNVA: <span id="nnvaTimeText">00:00.0</span> (<span id="nnvaPercentText">0%</span>)</span>
-          <span class="text-nva">NVA: <span id="nvaTimeText">00:00.0</span> (<span id="nvaPercentText">0%</span>)</span>
+          <span class="text-va">VA (Hijau): <span id="vaTimeText">00:00.0</span> (<span id="vaPercentText">0%</span>)</span>
+          <span class="text-nnva">NNVA (Biru): <span id="nnvaTimeText">00:00.0</span> (<span id="nnvaPercentText">0%</span>)</span>
+          <span class="text-nva">NVA (Merah): <span id="nvaTimeText">00:00.0</span> (<span id="nvaPercentText">0%</span>)</span>
         </div>
         <div class="bar-bg">
           <div id="barVa" class="bar-va" style="width: 33.3%;"></div>
@@ -514,13 +521,13 @@
 
     <!-- 3 Action Buttons -->
     <div class="btn-action-group">
-      <!-- 1. Tombol VA (Value Added) -->
+      <!-- 1. Tombol VA (HIJAU) -->
       <button type="button" id="btnVa" onclick="switchState('VA')" class="big-btn btn-va">
         <div class="btn-left">
           <div class="icon-box">VA</div>
           <div>
             <div class="btn-title">PROSES KERJA (VA)</div>
-            <div class="btn-desc">Menjahit, mengelem, rakit produk</div>
+            <div class="btn-desc">Menjahit, lem, rakit (Nilai Tambah)</div>
           </div>
         </div>
         <div class="btn-right">
@@ -529,13 +536,13 @@
         </div>
       </button>
 
-      <!-- 2. Tombol NNVA (Necessary Non-Value Added) -->
+      <!-- 2. Tombol NNVA (BIRU) -->
       <button type="button" id="btnNnva" onclick="switchState('NNVA')" class="big-btn btn-nnva">
         <div class="btn-left">
           <div class="icon-box">NN</div>
           <div>
             <div class="btn-title">KERJA PENDUKUNG (NNVA)</div>
-            <div class="btn-desc">Ambil bahan, taruh sepatu, atur posisi</div>
+            <div class="btn-desc">Ambil bahan, taruh sepatu, pasang pad</div>
           </div>
         </div>
         <div class="btn-right">
@@ -544,13 +551,13 @@
         </div>
       </button>
 
-      <!-- 3. Tombol NVA (Non-Value Added / Waste) -->
-      <button type="button" id="btnNva" onclick="switchState('NVA')" class="big-btn btn-nva">
+      <!-- 3. Tombol NVA (MERAH) -->
+      <button type="button" id="btnNnvaRed" onclick="switchState('NVA')" class="big-btn btn-nva">
         <div class="btn-left">
           <div class="icon-box">WA</div>
           <div>
             <div class="btn-title">PEMBOROSAN / WASTE (NVA)</div>
-            <div class="btn-desc">Tunggu bahan, gerakan sia-sia, rework</div>
+            <div class="btn-desc">Marking tip, tunggu bahan, gerakan sia-sia</div>
           </div>
         </div>
         <div class="btn-right">
@@ -560,53 +567,72 @@
       </button>
     </div>
 
-    <!-- Editable Custom Tags Manager -->
+    <!-- Pre-Loaded Activity Chips -->
     <div class="tags-card">
       <div class="tags-top-bar">
-        <span class="tags-card-title">Kategori / Tag Aktivitas (Bisa diedit/tambah):</span>
-        <button type="button" class="btn-add-tag" onclick="addNewTagPrompt()">+ Tambah Tag</button>
+        <span class="tags-card-title">Daftar Aktivitas Pabrik (Klik untuk pilih):</span>
+        <button type="button" class="btn-add-tag" onclick="addNewActivityPrompt()">+ Tambah Baru</button>
       </div>
 
-      <div class="tag-list" id="tagListContainer">
+      <div class="tag-list" id="activityChipsContainer">
         <!-- Rendered by JS -->
       </div>
 
       <div class="tag-current-box">
-        <span style="color:#94a3b8;">Nama Tag Aktif:</span>
-        <input type="text" id="customTagInput" placeholder="Ketik/Pilih tag..." oninput="updateActiveTagText(this.value)">
+        <span style="color:#94a3b8; font-size: 10.5px;">Aktivitas Aktif:</span>
+        <input type="text" id="activeActivityInput" oninput="updateActiveActivityText(this.value)">
       </div>
     </div>
 
     <!-- Controls -->
     <div class="controls-grid">
       <button type="button" onclick="pauseAll()" class="btn-ctrl btn-pause">⏸ Jeda</button>
-      <button type="button" onclick="finishCycle()" class="btn-ctrl btn-finish">🏁 Selesai Siklus</button>
+      <button type="button" onclick="finishCycle()" class="btn-ctrl btn-finish">🏁 Selesai Siklus (Next CT)</button>
       <button type="button" onclick="exportToCSV()" class="btn-ctrl btn-export">📥 Download Excel</button>
     </div>
 
-    <!-- Splits List -->
-    <div class="card">
-      <div class="splits-header">
-        <h3>Riwayat Split <span id="splitCountBadge" class="split-count">0 Split</span></h3>
-        <button type="button" onclick="clearAllData()" class="btn-reset">Reset</button>
+    <!-- Live Matrix Table (CT 1, CT 2, CT 3, AVERAGE) -->
+    <div class="matrix-card">
+      <div class="matrix-header">
+        <h3>Matriks Siklus Time Study</h3>
+        <button type="button" onclick="clearAllData()" class="btn-reset">Reset Semua</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="matrix-table" id="matrixTable">
+          <thead>
+            <tr id="matrixTableHeader">
+              <th>Activity</th>
+              <th>Tipe</th>
+              <th>CT 1</th>
+              <th>CT 2</th>
+              <th>CT 3</th>
+              <th>AVERAGE</th>
+            </tr>
+          </thead>
+          <tbody id="matrixTableBody">
+            <tr>
+              <td colspan="6" style="text-align: center; color: #64748b; padding: 15px;">
+                Belum ada data rekaman siklus.
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="splits-list" id="splitListContainer">
-        <div style="text-align: center; color: #64748b; font-size: 11px; padding: 18px 0;">
-          Klik salah satu tombol (VA, NNVA, atau NVA) untuk mulai merekam split.
-        </div>
+        <!-- Mini Log -->
       </div>
     </div>
 
   </div>
 
   <script>
-    // State
-    let state = 'IDLE'; // 'IDLE', 'VA', 'NNVA', 'NVA', 'PAUSED'
+    let state = 'IDLE';
     let currentCycle = 1;
+    let maxCycleMeasured = 1;
     let splits = [];
 
-    // Accumulators
     let mainStartTime = 0;
     let mainAccumulated = 0;
     let currentLapStartTime = 0;
@@ -617,114 +643,108 @@
 
     let timerInterval = null;
 
-    // Default Tags (Bisa diedit & ditambah oleh user, tersimpan di localStorage)
-    const DEFAULT_TAGS = [
-      'Pengerjaan Inti (Sewing/Assembling)',
-      'Ambil Komponen / Bahan',
-      'Taruh Produk ke Rak/Conveyor',
-      'Atur/Rapikan Posisi Material',
-      'Inspeksi Visual Singkat',
-      'Gerakan Sia-sia (Motion)',
-      'Menunggu Bahan (Waiting)',
-      'Benang Kusut / Re-threading',
-      'Rework / Perbaiki Cacat',
-      'Mencari Alat / Gunting Hilang',
-      'Masalah Mesin / Jarum Patah'
+    // PRE-LOADED ACTIVITIES DARI FOTO EXCEL PABRIK SEPATU
+    const FACTORY_ACTIVITIES = [
+      { name: 'Picking up components before stitching', type: 'NNVA' },
+      { name: 'Marking Tip', type: 'NVA' },
+      { name: 'Install and remove pad', type: 'NNVA' },
+      { name: 'Stitching Tip Vamp and adjust', type: 'VA' },
+      { name: 'Manual thread trimming after stitching', type: 'NNVA' },
+      { name: 'Component inspection after stitching', type: 'NNVA' },
+      { name: 'Marking the stitching result', type: 'NNVA' },
+      { name: 'Placing the stitching result', type: 'NNVA' },
+      { name: 'Arrange material on the table', type: 'NVA' }
     ];
 
-    let userTags = [];
-    let currentActiveTag = 'Pengerjaan Inti (Sewing/Assembling)';
+    let activities = [];
+    let currentActiveActivity = FACTORY_ACTIVITIES[0].name;
 
-    // Load Tags from LocalStorage
-    function loadTags() {
+    function loadActivities() {
       try {
-        const stored = localStorage.getItem('ie_user_tags');
+        const stored = localStorage.getItem('ie_factory_activities');
         if (stored) {
-          userTags = JSON.parse(stored);
+          activities = JSON.parse(stored);
         } else {
-          userTags = [...DEFAULT_TAGS];
-          saveTags();
+          activities = [...FACTORY_ACTIVITIES];
+          saveActivities();
         }
       } catch (e) {
-        userTags = [...DEFAULT_TAGS];
+        activities = [...FACTORY_ACTIVITIES];
       }
-      renderTags();
-      document.getElementById('customTagInput').value = currentActiveTag;
+      renderActivityChips();
+      document.getElementById('activeActivityInput').value = currentActiveActivity;
     }
 
-    function saveTags() {
+    function saveActivities() {
       try {
-        localStorage.setItem('ie_user_tags', JSON.stringify(userTags));
+        localStorage.setItem('ie_factory_activities', JSON.stringify(activities));
       } catch (e) {}
     }
 
-    function renderTags() {
-      const container = document.getElementById('tagListContainer');
+    function renderActivityChips() {
+      const container = document.getElementById('activityChipsContainer');
       let html = '';
-      userTags.forEach((tag, idx) => {
-        const isActive = tag === currentActiveTag;
+      activities.forEach((act, idx) => {
+        const isActive = act.name === currentActiveActivity;
+        let typeClass = 'chip-nnva';
+        if (act.type === 'VA') typeClass = 'chip-va';
+        else if (act.type === 'NVA') typeClass = 'chip-nva';
+
         html += `
-          <div class="tag-chip ${isActive ? 'active-tag' : ''}" onclick="selectTag('${tag.replace(/'/g, "\\'")}')">
-            <span>${tag}</span>
-            <button type="button" class="tag-delete-btn" onclick="deleteTag(event, ${idx})">&times;</button>
+          <div class="act-chip ${typeClass} ${isActive ? 'chip-active' : ''}" onclick="selectActivity('${act.name.replace(/'/g, "\\'")}', '${act.type}')">
+            <span>${act.name}</span>
+            <button type="button" class="tag-delete-btn" onclick="deleteActivity(event, ${idx})">&times;</button>
           </div>
         `;
       });
       container.innerHTML = html;
     }
 
-    function selectTag(tag) {
-      currentActiveTag = tag;
-      document.getElementById('customTagInput').value = tag;
-      renderTags();
-      updateLastSplitTag(tag);
+    function selectActivity(name, type) {
+      currentActiveActivity = name;
+      document.getElementById('activeActivityInput').value = name;
+      renderActivityChips();
+      switchState(type, name);
     }
 
-    function updateActiveTagText(val) {
-      currentActiveTag = val.trim() || 'Aktivitas';
-      updateLastSplitTag(currentActiveTag);
-    }
-
-    function updateLastSplitTag(tag) {
+    function updateActiveActivityText(val) {
+      currentActiveActivity = val.trim() || 'Aktivitas';
       if ((state === 'VA' || state === 'NNVA' || state === 'NVA') && splits.length > 0) {
         const last = splits[splits.length - 1];
         if (last && !last.endTime) {
-          last.tag = tag;
-          renderSplits();
+          last.tag = currentActiveActivity;
+          renderMatrix();
         }
       }
     }
 
-    function addNewTagPrompt() {
-      const newTag = prompt('Masukkan nama tag/kategori pemborosan baru:');
-      if (newTag && newTag.trim() !== '') {
-        const clean = newTag.trim();
-        if (!userTags.includes(clean)) {
-          userTags.push(clean);
-          saveTags();
-          selectTag(clean);
-        }
-      }
+    function addNewActivityPrompt() {
+      const name = prompt('Nama Aktivitas Baru:');
+      if (!name || name.trim() === '') return;
+      const type = prompt('Kategori IE (ketik: VA, NNVA, atau NVA):', 'NNVA');
+      let cleanType = (type || 'NNVA').toUpperCase().trim();
+      if (!['VA', 'NNVA', 'NVA'].includes(cleanType)) cleanType = 'NNVA';
+
+      activities.push({ name: name.trim(), type: cleanType });
+      saveActivities();
+      selectActivity(name.trim(), cleanType);
     }
 
-    function deleteTag(e, idx) {
+    function deleteActivity(e, idx) {
       e.stopPropagation();
-      if (userTags.length <= 1) {
-        alert('Minimal harus ada 1 tag tersisa!');
+      if (activities.length <= 1) {
+        alert('Minimal harus ada 1 aktivitas tersisa!');
         return;
       }
-      if (confirm(`Hapus tag "${userTags[idx]}"?`)) {
-        userTags.splice(idx, 1);
-        saveTags();
-        if (!userTags.includes(currentActiveTag)) {
-          currentActiveTag = userTags[0] || 'Aktivitas';
-          document.getElementById('customTagInput').value = currentActiveTag;
-        }
-        renderTags();
+      if (confirm(`Hapus aktivitas "${activities[idx].name}"?`)) {
+        activities.splice(idx, 1);
+        saveActivities();
+        currentActiveActivity = activities[0].name;
+        document.getElementById('activeActivityInput').value = currentActiveActivity;
+        renderActivityChips();
       }
     }
 
-    // Time Formatters
     function formatTime(ms) {
       let totalSeconds = Math.floor(ms / 1000);
       let minutes = Math.floor(totalSeconds / 60);
@@ -741,11 +761,11 @@
       return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${tenths}`;
     }
 
-    // Switch State Machine (VA, NNVA, NVA)
-    function switchState(newState) {
+    function switchState(newState, customTag) {
       const now = Date.now();
+      const tagToUse = customTag || currentActiveActivity;
 
-      if (state === newState) {
+      if (state === newState && splits.length > 0 && splits[splits.length - 1].tag === tagToUse) {
         recordSplit(now);
         currentLapStartTime = now;
       } else {
@@ -759,7 +779,6 @@
             vaTotalTime = 0;
             nnvaTotalTime = 0;
             nvaTotalTime = 0;
-            splits = [];
           } else {
             mainStartTime = now;
           }
@@ -768,36 +787,30 @@
         currentLapStartTime = now;
       }
 
-      // Automatically suggest contextual tag if needed
-      let autoTag = currentActiveTag;
-      if (newState === 'VA' && (!autoTag || autoTag.includes('Waste') || autoTag.includes('Menunggu') || autoTag.includes('Kusut'))) {
-        autoTag = 'Pengerjaan Inti (Sewing/Assembling)';
-        currentActiveTag = autoTag;
-        document.getElementById('customTagInput').value = autoTag;
-        renderTags();
-      } else if (newState === 'NNVA' && (!autoTag || autoTag.includes('Pengerjaan Inti'))) {
-        autoTag = 'Ambil Komponen / Bahan';
-        currentActiveTag = autoTag;
-        document.getElementById('customTagInput').value = autoTag;
-        renderTags();
-      }
+      currentActiveActivity = tagToUse;
+      document.getElementById('activeActivityInput').value = tagToUse;
+      renderActivityChips();
 
       splits.push({
         cycle: currentCycle,
         splitIndex: splits.length + 1,
         type: newState,
-        tag: currentActiveTag,
+        tag: tagToUse,
         startTime: now,
         endTime: null,
         duration: 0
       });
+
+      if (currentCycle > maxCycleMeasured) {
+        maxCycleMeasured = currentCycle;
+      }
 
       if (!timerInterval) {
         timerInterval = setInterval(updateTick, 40);
       }
 
       updateUIState();
-      renderSplits();
+      renderMatrix();
     }
 
     function recordSplit(now) {
@@ -823,7 +836,7 @@
         timerInterval = null;
       }
       updateUIState();
-      renderSplits();
+      renderMatrix();
     }
 
     function finishCycle() {
@@ -839,16 +852,17 @@
       }
 
       alert(
-        `Siklus #${currentCycle} Selesai!\n` +
-        `Total Cycle Time: ${formatTime(mainAccumulated)}\n` +
-        `• VA (Kerja Inti): ${formatTime(vaTotalTime)}\n` +
-        `• NNVA (Pendukung): ${formatTime(nnvaTotalTime)}\n` +
-        `• NVA (Waste): ${formatTime(nvaTotalTime)}\n\n` +
-        `Data tersimpan. Lanjut ke Siklus #${currentCycle + 1}.`
+        `Siklus CT ${currentCycle} Selesai!\n` +
+        `Total Waktu CT ${currentCycle}: ${formatTime(mainAccumulated)}\n\n` +
+        `Lanjut ke Siklus CT ${currentCycle + 1}.`
       );
 
       currentCycle++;
-      document.getElementById('cycleNumDisplay').innerText = currentCycle;
+      if (currentCycle > maxCycleMeasured) {
+        maxCycleMeasured = currentCycle;
+      }
+      document.getElementById('cycleNumDisplay').innerText = `CT ${currentCycle}`;
+
       mainAccumulated = 0;
       vaTotalTime = 0;
       nnvaTotalTime = 0;
@@ -857,17 +871,18 @@
 
       updateTick();
       updateUIState();
-      renderSplits();
+      renderMatrix();
     }
 
     function clearAllData() {
-      if (!confirm('Yakin ingin mereset semua data pengukuran & split?')) return;
+      if (!confirm('Yakin ingin mereset seluruh data CT 1, CT 2, CT 3, dll?')) return;
       if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
       }
       state = 'IDLE';
       currentCycle = 1;
+      maxCycleMeasured = 1;
       splits = [];
       mainStartTime = 0;
       mainAccumulated = 0;
@@ -875,7 +890,7 @@
       nnvaTotalTime = 0;
       nvaTotalTime = 0;
 
-      document.getElementById('cycleNumDisplay').innerText = currentCycle;
+      document.getElementById('cycleNumDisplay').innerText = `CT ${currentCycle}`;
       document.getElementById('mainTimer').innerText = '00:00.00';
       document.getElementById('vaLiveTimer').innerText = '00:00.0';
       document.getElementById('nnvaLiveTimer').innerText = '00:00.0';
@@ -891,7 +906,7 @@
       document.getElementById('barNva').style.width = '33.4%';
 
       updateUIState();
-      renderSplits();
+      renderMatrix();
     }
 
     function updateTick() {
@@ -912,7 +927,7 @@
           curNnva += lapElapsed;
           document.getElementById('nnvaLiveTimer').innerText = formatTimeShort(lapElapsed);
         } else if (state === 'NVA') {
-          curNva += lapElapsed;
+          curNnva += lapElapsed;
           document.getElementById('nvaLiveTimer').innerText = formatTimeShort(lapElapsed);
         }
       }
@@ -920,7 +935,7 @@
       document.getElementById('mainTimer').innerText = formatTime(curCycleDur);
       document.getElementById('vaTimeText').innerText = formatTimeShort(curVa);
       document.getElementById('nnvaTimeText').innerText = formatTimeShort(curNnva);
-      document.getElementById('nvaTimeText').innerText = formatTimeShort(curNnva);
+      document.getElementById('nvaTimeText').innerText = formatTimeShort(curNva);
 
       const totalActive = curVa + curNnva + curNva;
       if (totalActive > 0) {
@@ -943,7 +958,7 @@
       const text = document.getElementById('statusText');
       const btnVa = document.getElementById('btnVa');
       const btnNnva = document.getElementById('btnNnva');
-      const btnNva = document.getElementById('btnNva');
+      const btnNva = document.getElementById('btnNnvaRed');
 
       btnVa.classList.remove('btn-active-ring');
       btnNnva.classList.remove('btn-active-ring');
@@ -970,109 +985,156 @@
       }
     }
 
-    function renderSplits() {
-      const container = document.getElementById('splitListContainer');
-      document.getElementById('splitCountBadge').innerText = `${splits.length} Split`;
+    function buildMatrixData() {
+      const numCycles = Math.max(1, maxCycleMeasured);
+      const actMap = new Map();
 
-      if (splits.length === 0) {
-        container.innerHTML = `<div style="text-align: center; color: #64748b; font-size: 11px; padding: 18px 0;">Klik salah satu tombol (VA, NNVA, atau NVA) untuk mulai merekam split.</div>`;
+      splits.forEach(s => {
+        if (!actMap.has(s.tag)) {
+          actMap.set(s.tag, {
+            name: s.tag,
+            type: s.type,
+            cycles: {}
+          });
+        }
+      });
+
+      splits.forEach(s => {
+        const dur = s.endTime ? (s.endTime - s.startTime) : (Date.now() - s.startTime);
+        const item = actMap.get(s.tag);
+        if (item) {
+          if (!item.cycles[s.cycle]) item.cycles[s.cycle] = 0;
+          item.cycles[s.cycle] += dur;
+        }
+      });
+
+      return { numCycles, actList: Array.from(actMap.values()) };
+    }
+
+    function renderMatrix() {
+      const header = document.getElementById('matrixTableHeader');
+      const body = document.getElementById('matrixTableBody');
+      const { numCycles, actList } = buildMatrixData();
+
+      let headHtml = '<th>Activity</th><th>Tipe</th>';
+      for (let c = 1; c <= numCycles; c++) {
+        headHtml += `<th>CT ${c}</th>`;
+      }
+      headHtml += '<th>AVERAGE</th>';
+      header.innerHTML = headHtml;
+
+      if (actList.length === 0) {
+        body.innerHTML = `<tr><td colspan="${numCycles + 3}" style="text-align: center; color: #64748b; padding: 15px;">Belum ada data rekaman siklus.</td></tr>`;
         return;
       }
 
-      let html = '';
-      for (let i = splits.length - 1; i >= 0; i--) {
-        const item = splits[i];
-        const isRunning = !item.endTime;
-        const durText = isRunning ? 'Merekam...' : `${(item.duration / 1000).toFixed(2)}s`;
-        
-        let rowClass = 'row-va';
-        let pillClass = 'pill-va';
-        let tagClass = 'tag-va';
+      let bodyHtml = '';
+      let cycleTotals = new Array(numCycles + 1).fill(0);
+      let avgGrandTotal = 0;
 
-        if (item.type === 'NNVA') {
-          rowClass = 'row-nnva';
-          pillClass = 'pill-nnva';
-          tagClass = 'tag-nnva';
-        } else if (item.type === 'NVA') {
-          rowClass = 'row-nva';
-          pillClass = 'pill-nva';
-          tagClass = 'tag-nva';
+      actList.forEach(act => {
+        let trClass = 'tr-nnva';
+        if (act.type === 'VA') trClass = 'tr-va';
+        else if (act.type === 'NVA') trClass = 'tr-nva';
+
+        bodyHtml += `<tr class="${trClass}"><td class="col-act">${act.name}</td><td><b>${act.type}</b></td>`;
+
+        let sumSec = 0;
+        let countCycles = 0;
+
+        for (let c = 1; c <= numCycles; c++) {
+          const ms = act.cycles[c];
+          if (ms && ms > 0) {
+            const sec = (ms / 1000).toFixed(2);
+            bodyHtml += `<td>${sec}s</td>`;
+            sumSec += (ms / 1000);
+            countCycles++;
+            cycleTotals[c] += ms;
+          } else {
+            bodyHtml += `<td style="color:#64748b;">-</td>`;
+          }
         }
 
-        html += `
-          <div class="split-row ${rowClass}">
-            <div class="row-left">
-              <span class="row-num">#${item.splitIndex}</span>
-              <span class="row-pill ${pillClass}">${item.type}</span>
-              <div>
-                <div class="row-tag ${tagClass}">${item.tag}</div>
-                <div class="row-sub">Siklus #${item.cycle}</div>
-              </div>
-            </div>
-            <div class="row-dur ${isRunning ? 'dur-running' : ''}">${durText}</div>
-          </div>
-        `;
+        const avg = countCycles > 0 ? (sumSec / countCycles).toFixed(2) : '-';
+        if (avg !== '-') avgGrandTotal += parseFloat(avg);
+
+        bodyHtml += `<td><b>${avg !== '-' ? avg + 's' : '-'}</b></td></tr>`;
+      });
+
+      bodyHtml += `<tr class="tr-total"><td class="col-act">TOTAL CYCLE TIME</td><td>ALL</td>`;
+      for (let c = 1; c <= numCycles; c++) {
+        const totalSec = (cycleTotals[c] / 1000).toFixed(2);
+        bodyHtml += `<td><b>${totalSec}s</b></td>`;
       }
-      container.innerHTML = html;
+      bodyHtml += `<td><b>${avgGrandTotal.toFixed(2)}s</b></td></tr>`;
+
+      body.innerHTML = bodyHtml;
     }
 
-    // Export Data to CSV (Compatible with Excel)
     function exportToCSV() {
       if (splits.length === 0) {
         alert('Belum ada data split untuk diekspor!');
         return;
       }
-      const proc = document.getElementById('processName').value || 'Proses_Sepatu';
-      const model = document.getElementById('modelName').value || 'Model_Standard';
+      const op = document.getElementById('opName').value || 'Nama Operator';
+      const proc = document.getElementById('procName').value || 'Nama Proses';
+      const { numCycles, actList } = buildMatrixData();
 
-      let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
-      csvContent += 'No Split,Siklus,Tipe IE,Kategori / Aktivitas,Durasi (Detik),Durasi (MM:SS),Proses / Operator,Model / Article\n';
+      let csv = 'data:text/csv;charset=utf-8,\uFEFF';
+      
+      let headerCols = ['Area / Proses', 'Nama Operator', 'Activity', 'Tipe IE'];
+      for (let c = 1; c <= numCycles; c++) {
+        headerCols.push(`CT ${c}`);
+      }
+      headerCols.push('AVERAGE');
+      headerCols.push('Remarks');
+      csv += headerCols.join(',') + '\n';
 
-      let sumVa = 0;
-      let sumNnva = 0;
-      let sumNva = 0;
+      let cycleTotals = new Array(numCycles + 1).fill(0);
+      let avgGrandTotal = 0;
 
-      splits.forEach((s) => {
-        const durMs = s.endTime ? (s.endTime - s.startTime) : (Date.now() - s.startTime);
-        const durSec = (durMs / 1000).toFixed(2);
-        const durFmt = formatTime(durMs);
-
-        if (s.type === 'VA') sumVa += durMs;
-        else if (s.type === 'NNVA') sumNnva += durMs;
-        else if (s.type === 'NVA') sumNva += durMs;
-
-        let tipeLabel = 'VA (Value Added)';
-        if (s.type === 'NNVA') tipeLabel = 'NNVA (Necessary Non-Value Added)';
-        else if (s.type === 'NVA') tipeLabel = 'NVA (Non-Value Added / Waste)';
-
-        const row = [
-          s.splitIndex,
-          s.cycle,
-          `"${tipeLabel}"`,
-          `"${s.tag.replace(/"/g, '""')}"`,
-          durSec,
-          `"${durFmt}"`,
+      actList.forEach(act => {
+        let sumSec = 0;
+        let countCycles = 0;
+        let row = [
           `"${proc.replace(/"/g, '""')}"`,
-          `"${model.replace(/"/g, '""')}"`
-        ].join(',');
-        csvContent += row + '\n';
+          `"${op.replace(/"/g, '""')}"`,
+          `"${act.name.replace(/"/g, '""')}"`,
+          `"${act.type}"`
+        ];
+
+        for (let c = 1; c <= numCycles; c++) {
+          const ms = act.cycles[c];
+          if (ms && ms > 0) {
+            const sec = (ms / 1000).toFixed(2);
+            row.push(sec);
+            sumSec += (ms / 1000);
+            countCycles++;
+            cycleTotals[c] += ms;
+          } else {
+            row.push('');
+          }
+        }
+
+        const avg = countCycles > 0 ? (sumSec / countCycles).toFixed(2) : '';
+        if (avg !== '') avgGrandTotal += parseFloat(avg);
+        row.push(avg);
+        row.push('');
+
+        csv += row.join(',') + '\n';
       });
 
-      const totalMs = sumVa + sumNnva + sumNva;
-      const pVa = totalMs > 0 ? ((sumVa / totalMs) * 100).toFixed(1) : '0';
-      const pNnva = totalMs > 0 ? ((sumNnva / totalMs) * 100).toFixed(1) : '0';
-      const pNva = totalMs > 0 ? ((sumNva / totalMs) * 100).toFixed(1) : '0';
+      let totalRow = ['TOTAL CYCLE TIME', `"${op}"`, 'SEMUA AKTIVITAS', 'TOTAL'];
+      for (let c = 1; c <= numCycles; c++) {
+        totalRow.push((cycleTotals[c] / 1000).toFixed(2));
+      }
+      totalRow.push(avgGrandTotal.toFixed(2));
+      totalRow.push('');
+      csv += totalRow.join(',') + '\n';
 
-      csvContent += '\n';
-      csvContent += '=== RINGKASAN TIME STUDY ===\n';
-      csvContent += `Total Cycle Time (Detik),${(totalMs / 1000).toFixed(2)},Format,${formatTime(totalMs)}\n`;
-      csvContent += `Total VA (Detik),${(sumVa / 1000).toFixed(2)},Persentase,${pVa}%\n`;
-      csvContent += `Total NNVA (Detik),${(sumNnva / 1000).toFixed(2)},Persentase,${pNnva}%\n`;
-      csvContent += `Total NVA (Detik),${(sumNva / 1000).toFixed(2)},Persentase,${pNva}%\n`;
-
-      const encodedUri = encodeURI(csvContent);
+      const encodedUri = encodeURI(csv);
       const link = document.createElement('a');
-      const filename = `IE_TimeStudy_${proc.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().slice(0,10)}.csv`;
+      const filename = `IE_Matrix_${op.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().slice(0,10)}.csv`;
       link.setAttribute('href', encodedUri);
       link.setAttribute('download', filename);
       document.body.appendChild(link);
@@ -1080,9 +1142,9 @@
       document.body.removeChild(link);
     }
 
-    loadTags();
+    loadActivities();
     updateUIState();
-    renderSplits();
+    renderMatrix();
   </script>
 </body>
 </html>
